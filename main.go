@@ -1,25 +1,37 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 
 	"github.com/gin-gonic/gin"
 	"github.com/shanedoc/gohub/bootstrap"
+	btsConfig "github.com/shanedoc/gohub/config"
+	"github.com/shanedoc/gohub/pkg/config"
 )
+
+func init() {
+	//加载config目录下配置文件
+	btsConfig.Initialize()
+}
 
 func main() {
 	//初始化gin
-	//r := gin.Default()
-	//new Gin框架实例
+	var env string
+	flag.StringVar(&env, "env", "", "加载 .env 文件，如 --env=testing 加载的是 .env.testing 文件")
+	flag.Parse()
+	config.InitConfig(env)
+
+	// new 一个 Gin Engine 实例
 	router := gin.New()
 
-	//初始化路由并绑定
+	// 初始化路由绑定
 	bootstrap.SetupRoute(router)
 
-	//运行服务
-	err := router.Run()
+	// 运行服务
+	err := router.Run(":" + config.Get("app.port"))
 	if err != nil {
-		//处理错误信息
+		// 错误处理，端口被占用了或者其他错误
 		fmt.Println(err.Error())
 	}
 
