@@ -11,6 +11,10 @@ type SignupPhoneExistRequest struct {
 	Phone string `json:"phone,omitempty" valid:"phone"`
 }
 
+type SignupEmailExistRequest struct {
+	Email string `json:"email,omitempty" valid:"email"`
+}
+
 func ValidateSignupPhoneExist(data interface{}, c *gin.Context) map[string][]string {
 	//自定义验证规则
 	rules := govalidator.MapData{
@@ -29,10 +33,37 @@ func ValidateSignupPhoneExist(data interface{}, c *gin.Context) map[string][]str
 	opts := govalidator.Options{
 		Data:          data,
 		Rules:         rules,
-		TagIdentifier: "valid",
+		TagIdentifier: "valid", //模型中struct的标签标示符
 		Messages:      messages,
 	}
 
 	//开始验证
+	return govalidator.New(opts).ValidateStruct()
+}
+
+func ValidateSignupEmailExist(data interface{}, c *gin.Context) map[string][]string {
+	//rules
+	rules := govalidator.MapData{
+		"email": []string{"required", "min:4", "max:30", "email"},
+	}
+
+	//messages
+	messages := govalidator.MapData{
+		"email": []string{
+			"required:Email 为必填项",
+			"min:Email 长度需大于 4",
+			"max:Email 长度需小于 30",
+			"email:Email 格式不正确，请提供有效的邮箱地址",
+		},
+	}
+
+	opts := govalidator.Options{
+		Data:          data,
+		Rules:         rules,
+		TagIdentifier: "valid",
+		Messages:      messages,
+	}
+
+	//validate
 	return govalidator.New(opts).ValidateStruct()
 }
