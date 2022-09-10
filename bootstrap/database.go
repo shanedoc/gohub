@@ -9,10 +9,10 @@ import (
 	"github.com/shanedoc/gohub/app/models/user"
 	"github.com/shanedoc/gohub/pkg/config"
 	"github.com/shanedoc/gohub/pkg/database"
+	"github.com/shanedoc/gohub/pkg/logger"
 	"gorm.io/driver/mysql"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
-	"gorm.io/gorm/logger"
 )
 
 //初始化数据库和ORM
@@ -41,7 +41,8 @@ func SetupDB() {
 	}
 
 	//连接数据库并设置GORM日志模式
-	database.Connect(dbConfig, logger.Default.LogMode(logger.Info))
+	//database.Connect(dbConfig, logger.Default.LogMode(logger.Info))
+	database.Connect(dbConfig, logger.NewGormLogger())
 
 	//设置最大连接数
 	database.SQLDB.SetMaxOpenConns(config.GetInt("database.mysql.max_open_connections"))
