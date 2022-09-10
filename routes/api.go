@@ -2,9 +2,8 @@
 package routes
 
 import (
-	"net/http"
-
 	"github.com/gin-gonic/gin"
+	"github.com/shanedoc/gohub/app/http/controllers/api/v1/auth"
 )
 
 //注册网页相关路由
@@ -13,13 +12,13 @@ func RegisterAPIRoutes(r *gin.Engine) {
 	//v1路由组,把路由全部放到该路由组下
 	v1 := r.Group("v1")
 	{
-		//注册一个路由
-		v1.GET("/", func(c *gin.Context) {
-			//json格式响应
-			c.JSON(http.StatusOK, gin.H{
-				"hello": "world",
-			})
-		})
+		//auth路由
+		authGroup := v1.Group("auth")
+		{
+			suc := new(auth.SignupController)
+			authGroup.POST("/signup/phone/exist", suc.IsPhoneExist) //校验手机号
+			authGroup.POST("/signup/email/exist", suc.IsEmailExist) //校验邮件
+		}
 	}
 
 }
