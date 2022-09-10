@@ -23,7 +23,8 @@ func registerGlobalMiddleware(route *gin.Engine) {
 	route.Use(
 		//gin.Logger(),
 		middlewares.Logger(),
-		gin.Recovery(),
+		//gin.Recovery(),
+		middlewares.Recovery(),
 	)
 }
 
