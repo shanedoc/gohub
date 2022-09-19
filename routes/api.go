@@ -18,6 +18,10 @@ func RegisterAPIRoutes(r *gin.Engine) {
 			suc := new(auth.SignupController)
 			authGroup.POST("/signup/phone/exist", suc.IsPhoneExist) //校验手机号
 			authGroup.POST("/signup/email/exist", suc.IsEmailExist) //校验邮件
+
+			//发送验证码
+			vcc := new(auth.VerifyController)
+			authGroup.POST("/verify-codes/captcha", vcc.ShowCaptcha)
 		}
 	}
 

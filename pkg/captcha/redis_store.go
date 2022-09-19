@@ -39,7 +39,7 @@ func (s *RedisStore) Get(key string, clear bool) string {
 }
 
 //Verify 实现 base64Captcha.Store interface 的 Verify 方法
-func (s *RedisStore) Verfiy(key, answer string, clear bool) bool {
+func (s *RedisStore) Verify(key, answer string, clear bool) bool {
 	v := s.Get(key, clear)
 	return v == answer
 }
