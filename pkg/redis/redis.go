@@ -25,7 +25,7 @@ var Reids *RedisClient
 //连接redis 设置全局redis对象
 func ConnectReids(address string, username string, password string, db int) {
 	once.Do(func() {
-
+		Reids = NewClient(address, username, password, db)
 	})
 }
 

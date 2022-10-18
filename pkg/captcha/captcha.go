@@ -4,11 +4,10 @@ package captcha
 import (
 	"sync"
 
-	"github.com/shanedoc/gohub/app/app"
+	"github.com/mojocn/base64Captcha"
+	"github.com/shanedoc/gohub/pkg/app"
 	"github.com/shanedoc/gohub/pkg/config"
 	"github.com/shanedoc/gohub/pkg/redis"
-
-	"github.com/mojocn/base64Captcha"
 )
 
 type Captcha struct {
