@@ -11,8 +11,10 @@ import (
 //初始化redis
 func SetupRedis() {
 	//建立redis链接
+	fmt.Sprintf("%v:%v", config.GetString("redis.host"), config.GetString("redis.port"))
 	redis.ConnectReids(
-		fmt.Sprintf("%v:%v", config.GetString("redis.host"), config.GetString("redis.port")),
+		config.GetString("redis.host"),
+		//logger.Debug()
 		config.GetString("redis.username"),
 		config.GetString("redis.password"),
 		config.GetInt("redis.database"),
