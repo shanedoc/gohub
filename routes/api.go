@@ -21,7 +21,7 @@ func RegisterAPIRoutes(r *gin.Engine) {
 
 			//发送验证码
 			vcc := new(auth.VerifyController)
-			authGroup.POST("/verify-codes/captcha", vcc.ShowCaptcha)
+			authGroup.POST("/verify-codes/captcha", vcc.ShowCaptcha) //图片验证码,加限流
 		}
 	}
 
