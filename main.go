@@ -40,6 +40,8 @@ func main() {
 	// 初始化路由绑定
 	bootstrap.SetupRoute(router)
 
+	//verfiycode.NewVerifyCode().SendSMS("15652946160")
+
 	// 运行服务
 	err := router.Run(":" + config.Get("app.port"))
 	if err != nil {
