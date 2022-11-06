@@ -3,9 +3,11 @@ package auth
 import (
 	"github.com/gin-gonic/gin"
 	v1 "github.com/shanedoc/gohub/app/http/controllers/api/v1"
+	"github.com/shanedoc/gohub/app/requests"
 	"github.com/shanedoc/gohub/pkg/captcha"
 	"github.com/shanedoc/gohub/pkg/logger"
 	"github.com/shanedoc/gohub/pkg/response"
+	"github.com/shanedoc/gohub/pkg/verifycode"
 )
 
 type VerifyController struct {
@@ -22,5 +24,20 @@ func (vc *VerifyController) ShowCaptcha(c *gin.Context) {
 		"captcha_id":    id,
 		"captcha_image": b64s,
 	})
+}
+
+//发送短信验证码
+func (vc *VerifyController) SendUsingPhone(c *gin.Context) {
+	//验证表单
+	request := requests.VerifyCodePhoneRequest{}
+	if ok := requests.Validate(c, &request, requests.VerifyCodePhone); !ok {
+		return
+	}
+	//发送sms
+	if ok := verifycode.NewVerifyCode().SendSMS(request.Phone); !ok {
+		response.Abort500(c, "发送失败")
+	} else {
+		response.Success(c)
+	}
 
 }
