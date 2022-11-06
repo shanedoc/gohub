@@ -1,12 +1,11 @@
 package auth
 
 import (
-	"net/http"
-
 	"github.com/gin-gonic/gin"
 	v1 "github.com/shanedoc/gohub/app/http/controllers/api/v1"
 	"github.com/shanedoc/gohub/pkg/captcha"
 	"github.com/shanedoc/gohub/pkg/logger"
+	"github.com/shanedoc/gohub/pkg/response"
 )
 
 type VerifyController struct {
@@ -19,7 +18,7 @@ func (vc *VerifyController) ShowCaptcha(c *gin.Context) {
 	//记录错误日志
 	logger.LogIf(err)
 	//返回响应
-	c.JSON(http.StatusOK, gin.H{
+	response.JSON(c, gin.H{
 		"captcha_id":    id,
 		"captcha_image": b64s,
 	})

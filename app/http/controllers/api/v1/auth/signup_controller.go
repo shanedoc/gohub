@@ -7,6 +7,7 @@ import (
 	v1 "github.com/shanedoc/gohub/app/http/controllers/api/v1"
 	"github.com/shanedoc/gohub/app/models/user"
 	"github.com/shanedoc/gohub/app/requests"
+	"github.com/shanedoc/gohub/pkg/response"
 )
 
 //处理用户身份认证
@@ -32,7 +33,7 @@ func (sc *SignupController) IsPhoneExist(c *gin.Context) {
 		return
 	}
 	//返回响应
-	c.JSON(http.StatusOK, gin.H{
+	response.JSON(c, gin.H{
 		"exist": user.IsPhoneExist(request.Phone),
 	})
 }
@@ -48,7 +49,7 @@ func (sc *SignupController) IsEmailExist(c *gin.Context) {
 	}
 
 	//返回响应
-	c.JSON(http.StatusOK, gin.H{
+	response.JSON(c, gin.H{
 		"exist": user.IsEmailExist(request.Email),
 	})
 
