@@ -52,5 +52,30 @@ func (sc *SignupController) IsEmailExist(c *gin.Context) {
 	response.JSON(c, gin.H{
 		"exist": user.IsEmailExist(request.Email),
 	})
+}
+
+//email验证码验证
+func (sc *SignupController) SignupUsingEmail(c *gin.Context) {
+	//验证表单
+	request := requests.SignupUsingEmailRequest{}
+	if ok := requests.Validate(c, &request, requests.SignupUsingEmail); !ok {
+		return
+	}
+	//验证成功时,创建数据
+	userModel := user.User{
+		Name:     request.Name,
+		Email:    request.Email,
+		Password: request.Password,
+	}
+
+	userModel.Create()
+
+	if userModel.ID > 0 {
+		response.CreatedJSON(c, gin.H{
+			"data": userModel,
+		})
+	} else {
+		response.Abort500(c, "创建失败")
+	}
 
 }
