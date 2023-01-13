@@ -29,6 +29,7 @@ func RegisterAPIRoutes(r *gin.Engine) {
 			//使用手机号登里
 			lgc := new(auth.LoginController)
 			authGroup.POST("/login/using_phone", lgc.LoginByPhone)
+			authGroup.POST("/login/using_password", lgc.LoginByPassword)
 
 		}
 	}

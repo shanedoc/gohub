@@ -3,12 +3,20 @@ package requests
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/shanedoc/gohub/app/requests/validators"
+	"github.com/shanedoc/gohub/pkg/logger"
 	"github.com/thedevsaddam/govalidator"
 )
 
 type LoginByPhoneRequest struct {
 	Phone      string `json:"phone,omitempty" valid:"phone"`
 	VerifyCode string `json:"verify_code,omitempty" valid:"verify_code"`
+}
+
+type LoginByPasswordRequest struct {
+	CaptchaID     string `json:"captcha_id,omitempty" valid:"captcha_id"`
+	CaptchaAnswer string `json:"captcha_answer,omitempty" valid:"captcha_answer"`
+	LoginID       string `valid:"login_id" json:"login_id"`
+	Password      string `valid:"password" json:"password,omitempty"`
 }
 
 //手机登录表单验证
@@ -32,4 +40,37 @@ func LoginByPhone(data interface{}, c *gin.Context) map[string][]string {
 	_data := data.(*LoginByPhoneRequest)
 	errs = validators.ValidateVerifyCode(_data.Phone, _data.VerifyCode, errs)
 	return errs
+}
+
+//用户名密码表单验证
+func LoginByPassword(data interface{}, c *gin.Context) map[string][]string {
+	rules := govalidator.MapData{
+		"login_id":       []string{"required", "min:3"},
+		"password":       []string{"required", "min:6"},
+		"captcha_id":     []string{"required"},
+		"captcha_answer": []string{"required", "digits:6"},
+	}
+	logger.DebugJSON("用户名密码登录", "参数", data)
+	message := govalidator.MapData{
+		"login_id": []string{
+			"required:登录 ID 为必填项，支持手机号、邮箱和用户名",
+			"min:登录 ID 长度需大于 3",
+		},
+		"password": []string{
+			"required:密码为必填项",
+			"min:密码长度需大于 6",
+		},
+		"captcha_id": []string{
+			"required:图片验证码的 ID 为必填",
+		},
+		"captcha_answer": []string{
+			"required:图片验证码答案必填",
+			"digits:图片验证码长度必须为 6 位的数字",
+		},
+	}
+	err := validate(data, rules, message)
+	//图片验证码
+	_data := data.(*LoginByPasswordRequest)
+	err = validators.ValidateCaptcha(_data.CaptchaID, _data.CaptchaAnswer, err)
+	return err
 }
