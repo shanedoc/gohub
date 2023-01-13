@@ -45,7 +45,6 @@ func (vc *VerifyController) SendUsingPhone(c *gin.Context) {
 func (vc *VerifyController) SendUsingEmail(c *gin.Context) {
 	//验证表单
 	request := requests.VerifyCodeEmailRequest{}
-	logger.DebugJSON("发送邮件", "发件详情", request)
 	if ok := requests.Validate(c, &request, requests.VerifyCodeEmail); !ok {
 		return
 	}

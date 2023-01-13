@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/shanedoc/gohub/app/requests/validators"
 	"github.com/shanedoc/gohub/pkg/captcha"
+	"github.com/shanedoc/gohub/pkg/logger"
 	"github.com/thedevsaddam/govalidator"
 )
 
@@ -14,9 +15,9 @@ type VerifyCodePhoneRequest struct {
 }
 
 type VerifyCodeEmailRequest struct {
+	Email         string `json:"email,omitempty" valid:"email"`
 	CaptchaID     string `json:"captcha_id,omitempty" valid:"captcha_id"`
 	CaptchaAnswer string `json:"captcha_answer,omitempty" valid:"captcha_answer"`
-	Email         string `json:"email,omitempty" vaid:"email"`
 }
 
 //表单验证
@@ -76,7 +77,7 @@ func VerifyCodeEmail(data interface{}, c *gin.Context) map[string][]string {
 			"digits:图片验证码长度必须为 6 位的数字",
 		},
 	}
-
+	logger.DebugJSON("验证邮箱", "参数", data)
 	errs := validate(data, rules, message)
 
 	//图片验证码

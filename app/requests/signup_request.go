@@ -3,6 +3,7 @@ package requests
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/shanedoc/gohub/app/requests/validators"
+	"github.com/shanedoc/gohub/pkg/logger"
 	"github.com/thedevsaddam/govalidator"
 )
 
@@ -27,8 +28,8 @@ type SignupUsingEmailRequest struct {
 
 func SignupUsingEmail(data interface{}, c *gin.Context) map[string][]string {
 	rules := govalidator.MapData{
-		"email":            []string{"required", "min:4", "max:30", "email", "not_exists:users,email"},
-		"name":             []string{"required", "alpha_num", "between:3,20", "not_exists:users,name"},
+		"email":            []string{"required", "min:4", "max:30", "email"},
+		"name":             []string{"required", "alpha_num", "between:3,20"},
 		"password":         []string{"required", "min:6"},
 		"password_confirm": []string{"required"},
 		"verify_code":      []string{"required", "digits:6"},
@@ -39,7 +40,7 @@ func SignupUsingEmail(data interface{}, c *gin.Context) map[string][]string {
 			"min:Email 长度需大于 4",
 			"max:Email 长度需小于 30",
 			"email:Email 格式不正确，请提供有效的邮箱地址",
-			"not_exists:Email 已被占用",
+			//"not_exists:Email 已被占用",
 		},
 		"name": []string{
 			"required:用户名为必填项",
@@ -58,6 +59,7 @@ func SignupUsingEmail(data interface{}, c *gin.Context) map[string][]string {
 			"digits:验证码长度必须为 6 位的数字",
 		},
 	}
+	logger.DebugJSON("邮件注册", "参数", data)
 	errs := validate(data, rules, messages)
 
 	_data := data.(*SignupUsingEmailRequest)
