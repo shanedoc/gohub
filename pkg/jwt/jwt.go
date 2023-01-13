@@ -5,6 +5,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/shanedoc/gohub/pkg/app"
+
 	"github.com/gin-gonic/gin"
 	jwtpkg "github.com/golang-jwt/jwt"
 	"github.com/shanedoc/gohub/pkg/config"
@@ -144,7 +146,15 @@ func (jwt *JWT) createToken(claims JWTCustomClaims) (string, error) {
 
 //过期时间
 func (jwt *JWT) expireAtTime() int64 {
-
+	timenow := app.TimenowInTimezone()
+	var expireTime int64
+	if config.GetBool("app.debug") {
+		expireTime = config.GetInt64("jwt.debug_expire_time")
+	} else {
+		expireTime = config.GetInt64("jwt.expire_time")
+	}
+	expire := time.Duration(expireTime) * time.Minute
+	return timenow.Add(expire).Unix()
 }
 
 // getTokenFromHeader 使用 jwtpkg.ParseWithClaims 解析 Token
@@ -160,4 +170,10 @@ func (jwt *JWT) getTokenFromHeader(c *gin.Context) (string, error) {
 		return "", ErrHeaderMalformed
 	}
 	return parts[1], nil
+}
+
+func (jwt *JWT) parseTokenString(tokenString string) (*jwtpkg.Token, error) {
+	return jwtpkg.ParseWithClaims(tokenString, &JWTCustomClaims{}, func(t *jwtpkg.Token) (interface{}, error) {
+		return jwt.SignKey, nil
+	})
 }

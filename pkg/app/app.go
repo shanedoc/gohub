@@ -1,6 +1,10 @@
 package app
 
-import "github.com/shanedoc/gohub/pkg/config"
+import (
+	"time"
+
+	"github.com/shanedoc/gohub/pkg/config"
+)
 
 //app应用信息
 
@@ -14,4 +18,10 @@ func IsProduction() bool {
 
 func IsTesting() bool {
 	return config.Get("app.env") == "testing"
+}
+
+//获取当前时间支持时区
+func TimenowInTimezone() time.Time {
+	chinaTimezone, _ := time.LoadLocation(config.GetString("app.timezone"))
+	return time.Now().In(chinaTimezone)
 }

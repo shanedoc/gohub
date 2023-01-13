@@ -7,6 +7,7 @@ import (
 	v1 "github.com/shanedoc/gohub/app/http/controllers/api/v1"
 	"github.com/shanedoc/gohub/app/models/user"
 	"github.com/shanedoc/gohub/app/requests"
+	"github.com/shanedoc/gohub/pkg/jwt"
 	"github.com/shanedoc/gohub/pkg/response"
 )
 
@@ -71,8 +72,10 @@ func (sc *SignupController) SignupUsingEmail(c *gin.Context) {
 	userModel.Create()
 
 	if userModel.ID > 0 {
+		token := jwt.NewJWT().IssueToken(userModel.GetStringID(), userModel.Name)
 		response.CreatedJSON(c, gin.H{
-			"data": userModel,
+			"token": token,
+			"data":  userModel,
 		})
 	} else {
 		response.Abort500(c, "创建失败")
