@@ -26,6 +26,10 @@ func RegisterAPIRoutes(r *gin.Engine) {
 			authGroup.POST("/verify-codes/phone", vcc.SendUsingPhone) //验证码校验
 			authGroup.POST("/verify-codes/email", vcc.SendUsingEmail) //验证码校验
 
+			//使用手机号登里
+			lgc := new(auth.LoginController)
+			authGroup.POST("/login/using_phone", lgc.LoginByPhone)
+
 		}
 	}
 

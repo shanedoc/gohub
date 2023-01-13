@@ -21,3 +21,19 @@ type User struct {
 func (userModel *User) Create() {
 	database.DB.Create(&userModel)
 }
+
+//通过手机号、email、用户名获取用户信息
+func GetByMulti(loginId string) (userModel User) {
+	database.DB.
+		Where("phone=?", loginId).
+		Or("email=?", loginId).
+		Or("name=?", loginId).
+		First(&userModel)
+	return userModel
+}
+
+//通过手机号获取用户
+func GetByPhone(phone string) (userModel User) {
+	database.DB.Where("phone=?", phone).First(&userModel)
+	return
+}
