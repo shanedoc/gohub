@@ -5,12 +5,9 @@ import (
 	"fmt"
 
 	"github.com/gin-gonic/gin"
-	"github.com/shanedoc/gohub/app/http/middlewares"
 	"github.com/shanedoc/gohub/bootstrap"
 	btsConfig "github.com/shanedoc/gohub/config"
-	"github.com/shanedoc/gohub/pkg/auth"
 	"github.com/shanedoc/gohub/pkg/config"
-	"github.com/shanedoc/gohub/pkg/response"
 )
 
 func init() {
@@ -42,11 +39,6 @@ func main() {
 
 	// 初始化路由绑定
 	bootstrap.SetupRoute(router)
-
-	router.GET("/test_auth", middlewares.AuthJWT(), func(c *gin.Context) {
-        userModel := auth.CurrentUser(c)
-        response.Data(c, userModel)
-    })
 
 	//verfiycode.NewVerifyCode().SendSMS("15652946160")
 
