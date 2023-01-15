@@ -17,7 +17,7 @@ func AuthJWT() gin.HandlerFunc {
 
 		//jwt解析失败
 		if err != nil {
-			response.Unauthorized(c, fmt.Sprint("请查看%v 相关的接口认证文档"), config.GetString("app.name"))
+			response.Unauthorized(c, fmt.Sprintf("请查看 %v 相关的接口认证文档", config.GetString("app.name")))
 			return
 		}
 
