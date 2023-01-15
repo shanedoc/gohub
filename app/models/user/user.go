@@ -44,7 +44,14 @@ func Get(id string) (userModel User) {
 	return
 }
 
+//保存
 func (userModel *User) Save() (rowsAffected int64) {
 	result := database.DB.Save(&userModel)
 	return result.RowsAffected
+}
+
+//通过邮箱查找用户信息
+func GetByEmail(email string) (userModel User) {
+	database.DB.Where("email=?", email).First(&userModel)
+	return
 }
