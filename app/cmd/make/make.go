@@ -7,9 +7,9 @@ import (
 
 	"github.com/iancoleman/strcase"
 	"github.com/shanedoc/gohub/pkg/console"
+	"github.com/shanedoc/gohub/pkg/file"
 	"github.com/shanedoc/gohub/pkg/str"
 	"github.com/spf13/cobra"
-	"google.golang.org/appengine/file"
 )
 
 //make命令行的make命令

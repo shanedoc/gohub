@@ -1,6 +1,10 @@
 package file
 
-import "os"
+import (
+	"os"
+	"path/filepath"
+	"strings"
+)
 
 //package file辅助函数
 
@@ -18,4 +22,8 @@ func Exists(fileToCheck string) bool {
 		return false
 	}
 	return true
+}
+
+func FileNameWithoutExtension(filename string) string {
+	return strings.TrimSuffix(filename, filepath.Ext(filename))
 }
