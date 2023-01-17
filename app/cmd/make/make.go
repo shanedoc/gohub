@@ -12,7 +12,36 @@ import (
 	"github.com/spf13/cobra"
 )
 
-//make命令行的make命令
+// Model 参数解释
+// 单个词，用户命令传参，以 User 模型为例：
+//     - user
+//  - User
+//  - users
+//  - Users
+// 整理好的数据：
+// {
+//     "TableName": "users",
+//     "StructName": "User",
+//     "StructNamePlural": "Users"
+//     "VariableName": "user",
+//     "VariableNamePlural": "users",
+//     "PackageName": "user"
+// }
+// -
+// 两个词或者以上，用户命令传参，以 TopicComment 模型为例：
+//     - topic_comment
+//  - topic_comments
+//  - TopicComment
+//  - TopicComments
+// 整理好的数据：
+// {
+//     "TableName": "topic_comments",
+//     "StructName": "TopicComment",
+//     "StructNamePlural": "TopicComments"
+//     "VariableName": "topicComment",
+//     "VariableNamePlural": "topicComments",
+//     "PackageName": "topic_comment"
+// }
 
 type Model struct {
 	TableName          string
@@ -23,7 +52,9 @@ type Model struct {
 	PackageName        string
 }
 
-//stubsFS 方便我们后面打包这些 .stub 为后缀名的文件
+// stubsFS 方便我们后面打包这些 .stub 为后缀名的文件
+
+//go:embed stubs
 var stubsFS embed.FS
 
 // CmdMake 说明 cobra 命令
@@ -35,6 +66,7 @@ var CmdMake = &cobra.Command{
 func init() {
 	CmdMake.AddCommand(
 		CmdMakeCMD,
+		CmdMakeModel,
 		CmdMakeMigration,
 	)
 }

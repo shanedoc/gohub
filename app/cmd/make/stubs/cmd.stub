@@ -1,5 +1,11 @@
 package cmd
 
+import(
+    "github.com/shanedoc/gohub/pkg/console"
+    "github.com/spf13/cobra"
+    "errors"
+)
+
 var Cmd{{StructName}} = &cobra.Command{
     Use:   "{{PackageName}}",
     Short:  "HERE PUTS THE COMMAND DESCRIPTION",

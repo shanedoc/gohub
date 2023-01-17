@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/shanedoc/gohub/app/cmd"
+	"github.com/shanedoc/gohub/app/cmd/make"
 	"github.com/shanedoc/gohub/bootstrap"
 	btsConfig "github.com/shanedoc/gohub/config"
 	"github.com/shanedoc/gohub/pkg/config"
@@ -49,8 +50,7 @@ func main() {
 		cmd.CmdKey,
 		cmd.CmdPlay,
 		//cmd.CmdMakeModel,
-		//cmd.CmdMakeCMD,
-		//cmd.CmdTestCommand,
+		make.CmdMake,
 	)
 	// 配置默认运行 Web 服务
 	cmd.RegisterDefaultCmd(rootCmd, cmd.CmdServer)

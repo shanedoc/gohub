@@ -8,7 +8,7 @@ import (
 )
 
 var CmdMakeModel = &cobra.Command{
-	Use:   "molde",
+	Use:   "model",
 	Short: "Crate model file, example: make model user",
 	Run:   runMakeModel,
 	Args:  cobra.ExactArgs(1), // 只允许且必须传 1 个参数
@@ -19,7 +19,7 @@ func runMakeModel(cmd *cobra.Command, args []string) {
 	model := makeModelFromString(args[0])
 
 	//确保模型目录存在 eg:app/models/user
-	dir := fmt.Sprintf("app/models/%s", model.PackageName)
+	dir := fmt.Sprintf("app/models/%s/", model.PackageName)
 	//确保目录的目标存在,确保父目录和子目录都会创建  第二个参数是创建目录权限:0777
 	os.MkdirAll(dir, os.ModePerm)
 
