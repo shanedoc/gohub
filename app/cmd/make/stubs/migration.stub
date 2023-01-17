@@ -1,5 +1,12 @@
 package migrations
 
+import (
+    "database/sql"
+    "github.com/shanedoc/gohub/app/models"
+    "github.com/shanedoc/gohub/pkg/migrate"
+    "gorm.io/gorm"
+)
+
 func init(){
     type User struct{
         models.BaseModel
@@ -21,6 +28,4 @@ func init(){
     }
 
     migrate.Add("{{FileName}}", up, down)
-
-    
 }

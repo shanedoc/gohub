@@ -29,7 +29,7 @@ type Migration struct {
 func NewMigrator() *Migrator {
 	//初始化必要属性
 	migrator := &Migrator{
-		Folder:   "databases/migrations/",
+		Folder:   "database/migrations/",
 		DB:       database.DB,
 		Migrator: database.DB.Migrator(),
 	}
