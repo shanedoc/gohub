@@ -70,6 +70,7 @@ func init() {
 		CmdMakeMigration,
 		CmdMakeAPIController,
 		CmdMakeRequest,
+		CmdMakeFactory,
 	)
 }
 
