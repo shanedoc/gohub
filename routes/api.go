@@ -3,6 +3,7 @@ package routes
 
 import (
 	"github.com/gin-gonic/gin"
+	controllers "github.com/shanedoc/gohub/app/http/controllers/api/v1"
 	"github.com/shanedoc/gohub/app/http/controllers/api/v1/auth"
 	"github.com/shanedoc/gohub/app/http/middlewares"
 )
@@ -18,6 +19,7 @@ func RegisterAPIRoutes(r *gin.Engine) {
 	{
 		//auth路由
 		authGroup := v1.Group("auth")
+
 		//测试时可提高参数设置
 		authGroup.Use(middlewares.LimitIP("1000-H"))
 		{
@@ -44,6 +46,9 @@ func RegisterAPIRoutes(r *gin.Engine) {
 			authGroup.POST("/verify-codes/phone", middlewares.LimitPerRoute("20-H"), vcc.SendUsingPhone) //验证码校验
 			authGroup.POST("/verify-codes/email", middlewares.LimitPerRoute("20-H"), vcc.SendUsingEmail) //验证码校验
 
+			uc := new(controllers.UsersController)
+			//获取当前用户
+			v1.GET("/user", middlewares.AuthJWT(), uc.CurrentUser)
 		}
 	}
 
