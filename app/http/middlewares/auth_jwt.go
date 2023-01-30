@@ -20,9 +20,9 @@ func AuthJWT() gin.HandlerFunc {
 			response.Unauthorized(c, fmt.Sprintf("请查看 %v 相关的接口认证文档", config.GetString("app.name")))
 			return
 		}
-
+		//fmt.Println(claims.UserID)
 		//jwt解析成功 设置用户信息
-		userModel := user.Get(claims.Id)
+		userModel := user.Get(claims.UserID)
 		if userModel.ID == 0 {
 			response.Unauthorized(c, "找不到对应用户，用户可能已删除")
 			return
