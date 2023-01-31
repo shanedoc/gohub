@@ -75,6 +75,13 @@ func RegisterAPIRoutes(r *gin.Engine) {
 				tpcGroup.GET("/:id", middlewares.AuthJWT(), tpc.Show)      //查看帖子详情
 			}
 
+			//连接
+			lnk := new(controllers.LinksController)
+			lnkGroup := v1.Group("/links")
+			{
+				lnkGroup.GET("", lnk.Index)
+			}
+
 		}
 	}
 
