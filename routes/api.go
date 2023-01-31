@@ -57,7 +57,10 @@ func RegisterAPIRoutes(r *gin.Engine) {
 			cgc := new(controllers.CategoriesController)
 			cgcGroup := v1.Group("/categories")
 			{
-				cgcGroup.POST("", middlewares.AuthJWT(), cgc.Store)
+				cgcGroup.GET("", cgc.Index)                              //分类列表
+				cgcGroup.POST("", middlewares.AuthJWT(), cgc.Store)      //创建分类
+				cgcGroup.POST("/:id", middlewares.AuthJWT(), cgc.Update) //修改分类
+
 			}
 
 		}
