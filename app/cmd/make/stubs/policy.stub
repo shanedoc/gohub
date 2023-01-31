@@ -1,0 +1,11 @@
+package policies
+
+import(
+    "github.com/shanedoc/gohub/app/models/{{PackageName}}"
+    "github.com/shanedoc/gohub/pkg/auth"
+    "github.com/gin-gonic/gin"
+)
+
+func CanModify{{StructName}}(c *gin.Context, {{VariableName}}Model {{PackageName}}.{{StructName}}) bool {
+    return auth.CurrentUID(c) == {{VariableName}}Model.UserID
+}

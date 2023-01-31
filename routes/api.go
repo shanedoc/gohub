@@ -46,13 +46,14 @@ func RegisterAPIRoutes(r *gin.Engine) {
 			authGroup.POST("/verify-codes/phone", middlewares.LimitPerRoute("20-H"), vcc.SendUsingPhone) //验证码校验
 			authGroup.POST("/verify-codes/email", middlewares.LimitPerRoute("20-H"), vcc.SendUsingEmail) //验证码校验
 
-			uc := new(controllers.UsersController)
 			//获取当前用户
+			uc := new(controllers.UsersController)
 			v1.GET("/user", middlewares.AuthJWT(), uc.CurrentUser)
 			userGroup := v1.Group("/users")
 			{
 				userGroup.GET("", uc.Index)
 			}
+
 			//分类
 			cgc := new(controllers.CategoriesController)
 			cgcGroup := v1.Group("/categories")
@@ -61,7 +62,17 @@ func RegisterAPIRoutes(r *gin.Engine) {
 				cgcGroup.POST("", middlewares.AuthJWT(), cgc.Store)        //创建分类
 				cgcGroup.POST("/:id", middlewares.AuthJWT(), cgc.Update)   //修改分类
 				cgcGroup.DELETE("/:id", middlewares.AuthJWT(), cgc.Delete) //删除分类
+			}
 
+			//话题
+			tpc := new(controllers.TopicsController)
+			tpcGroup := v1.Group("/topics")
+			{
+				tpcGroup.GET("", tpc.Index)                                //列表
+				tpcGroup.POST("", middlewares.AuthJWT(), tpc.Store)        //创建帖子
+				tpcGroup.POST("/:id", middlewares.AuthJWT(), tpc.Update)   //修改帖子
+				tpcGroup.DELETE("/:id", middlewares.AuthJWT(), tpc.Delete) //删除帖子
+				tpcGroup.GET("/:id", middlewares.AuthJWT(), tpc.Show)      //查看帖子详情
 			}
 
 		}
