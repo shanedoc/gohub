@@ -42,6 +42,7 @@ func main() {
 			bootstrap.SetupRedis()
 
 			// 初始化缓存
+			bootstrap.SetupCache()
 		},
 	}
 	// 注册子命令
