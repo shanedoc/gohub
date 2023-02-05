@@ -9,7 +9,12 @@ import (
 
 type User struct {
 	models.BaseModel
-	Name     string `json:"name,omitempty"`
+	Name string `json:"name,omitempty"`
+
+	City         string `json:"city,omitempty"`
+	Introduction string `json:"introduction,omitempty"`
+	Avator       string `json:"avator,omitempty"`
+
 	Email    string `json:"-"` //json解析器忽略字段
 	Phone    string `json:"-"`
 	Password string `json:"-"`
