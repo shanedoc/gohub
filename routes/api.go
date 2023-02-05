@@ -52,10 +52,11 @@ func RegisterAPIRoutes(r *gin.Engine) {
 			userGroup := v1.Group("/users")
 			{
 				userGroup.GET("", uc.Index)
-				userGroup.PUT("", middlewares.AuthJWT(), uc.UserUpdateProfile)       //编辑用户信息
-				userGroup.PUT("/email", middlewares.AuthJWT(), uc.UpdateEmail)       //更新用户邮箱
-				userGroup.PUT("/phone", middlewares.AuthJWT(), uc.UpdatePhone)       //更新用手机号
-				userGroup.PUT("/password", middlewares.AuthJWT(), uc.UpdatePassword) //修改密码
+				userGroup.PUT("", middlewares.AuthJWT(), uc.UserUpdateProfile)  //编辑用户信息
+				userGroup.PUT("/email", middlewares.AuthJWT(), uc.UpdateEmail)  //更新用户邮箱
+				userGroup.PUT("/phone", middlewares.AuthJWT(), uc.UpdatePhone)  //更新用手机号
+				userGroup.PUT("/password", uc.UpdatePassword)                   //修改密码
+				userGroup.PUT("avatar", middlewares.AuthJWT(), uc.UpdateAvatar) //修改用户头像信息
 			}
 
 			//分类

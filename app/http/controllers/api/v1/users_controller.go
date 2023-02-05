@@ -6,6 +6,8 @@ import (
 	"github.com/shanedoc/gohub/app/requests"
 
 	"github.com/shanedoc/gohub/pkg/auth"
+	"github.com/shanedoc/gohub/pkg/config"
+	"github.com/shanedoc/gohub/pkg/file"
 	"github.com/shanedoc/gohub/pkg/response"
 )
 
@@ -101,4 +103,21 @@ func (ctrl *UsersController) UpdatePassword(c *gin.Context) {
 
 		response.Success(c)
 	}
+}
+
+func (ctrl *UsersController) UpdateAvatar(c *gin.Context) {
+	request := requests.UserUpdateAvatarRequest{}
+	if ok := requests.Validate(c, request, requests.UserUpdateAvatar); !ok {
+		return
+	}
+	//TODO::文件存储
+	avatar, err := file.SaveUploadAvatar(c, request.Avatar)
+	if err != nil {
+		response.Abort500(c, "上传用户头像错误!")
+		return
+	}
+	currentUser := auth.CurrentUser(c)
+	currentUser.Avator = config.GetString("app.url") + avatar
+	currentUser.Save()
+	response.Data(c, currentUser)
 }
