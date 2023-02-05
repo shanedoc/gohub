@@ -2,6 +2,7 @@ package requests
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/shanedoc/gohub/app/requests/validators"
 	"github.com/shanedoc/gohub/pkg/auth"
 	"github.com/thedevsaddam/govalidator"
 )
@@ -10,6 +11,22 @@ type UserUpdateProfileReuqest struct {
 	Name         string `valid:"name" json:"name"`
 	City         string `valid:"city" json:"city"`
 	Introduction string `valid:"introduction" json:"introduction"`
+}
+
+type UserUpdateEmailRequest struct {
+	Email      string `valid:"email" json:"email"`
+	VerifyCode string `valid:"email" json:"verify_code,omitempty"`
+}
+
+type UserUpdatePhoneRequest struct {
+	Phone      string `json:"phone" valid:"phone"`
+	VerifyCode string `json:"verify_code,omitempty" valid:"verify_code"`
+}
+
+type UserUpdatePasswordRequest struct {
+	Password        string `json:"password" valid:"password"`
+	NewPassword     string `json:"new_password" valid:"new_password"`
+	ConfirmPassword string `json:"new_password_confirm" valid:"new_password_confirm"`
 }
 
 func UserUpdateProfile(data interface{}, c *gin.Context) map[string][]string {
@@ -38,4 +55,94 @@ func UserUpdateProfile(data interface{}, c *gin.Context) map[string][]string {
 		},
 	}
 	return validate(data, rules, messages)
+}
+
+func UserUpdateEmailProfile(data interface{}, c *gin.Context) map[string][]string {
+	currentUser := auth.CurrentUser(c)
+	rules := govalidator.MapData{
+		"email": []string{
+			"required", "min:4",
+			"max:30",
+			"email",
+			"not_exists:users,email," + currentUser.GetStringID(),
+			"not_in:" + currentUser.Email,
+		},
+		"verify_code": []string{
+			"required", "digits:6",
+		},
+	}
+	messages := govalidator.MapData{
+		"email": []string{
+			"required:Email 为必填项",
+			"min:Email 长度需大于 4",
+			"max:Email 长度需小于 30",
+			"email:Email 格式不正确，请提供有效的邮箱地址",
+			"not_exists:Email 已被占用",
+			"not_in:新的 Email 与老 Email 一致",
+		},
+		"verify_code": []string{
+			"required:验证码答案必填",
+			"digits:验证码长度必须为 6 位的数字",
+		},
+	}
+	err := validate(data, rules, messages)
+	_data := data.(*UserUpdateEmailRequest)
+	err = validators.ValidateVerifyCode(_data.Email, _data.VerifyCode, err)
+	return err
+}
+
+func UserUpdatePhoneProfile(data interface{}, c *gin.Context) map[string][]string {
+	currentUser := auth.CurrentUser(c)
+	rules := govalidator.MapData{
+		"phone": []string{
+			"required", "digits:11",
+			"not_exists:user,phone" + currentUser.GetStringID(),
+			"not_in:" + currentUser.Phone,
+		},
+		"verify_code": []string{"required", "digits:6"},
+	}
+	messages := govalidator.MapData{
+		"phone": []string{
+			"required:手机号为必填项，参数名称 phone",
+			"digits:手机号长度必须为 11 位的数字",
+			"not_exists:手机号已被占用",
+			"not_in:新的手机与老手机号一致",
+		},
+		"verify_code": []string{
+			"required:验证码答案必填",
+			"digits:验证码长度必须为 6 位的数字",
+		},
+	}
+	errs := validate(data, rules, messages)
+	_data := data.(*UserUpdatePhoneRequest)
+	errs = validators.ValidateVerifyCode(_data.Phone, _data.VerifyCode, errs)
+	return errs
+}
+
+func UserUpdatePasswordProfile(data interface{}, c *gin.Context) map[string][]string {
+	rules := govalidator.MapData{
+		"password":             []string{"required", "min:6"},
+		"new_password":         []string{"required", "min:6"},
+		"new_password_confirm": []string{"required", "min:6"},
+	}
+	messages := govalidator.MapData{
+		"password": []string{
+			"required:密码为必填项",
+			"min:密码长度需大于 6",
+		},
+		"new_password": []string{
+			"required:密码为必填项",
+			"min:密码长度需大于 6",
+		},
+		"new_password_confirm": []string{
+			"required:确认密码框为必填项",
+			"min:确认密码长度需大于 6",
+		},
+	}
+	// 确保 comfirm 密码正确
+	errs := validate(data, rules, messages)
+	_data := data.(*UserUpdatePasswordRequest)
+	errs = validators.ValidatePasswordConfirm(_data.NewPassword, _data.ConfirmPassword, errs)
+
+	return errs
 }
