@@ -6,13 +6,20 @@ import (
 	controllers "github.com/shanedoc/gohub/app/http/controllers/api/v1"
 	"github.com/shanedoc/gohub/app/http/controllers/api/v1/auth"
 	"github.com/shanedoc/gohub/app/http/middlewares"
+	"github.com/shanedoc/gohub/pkg/config"
 )
 
 //注册网页相关路由
 func RegisterAPIRoutes(r *gin.Engine) {
 
 	//v1路由组,把路由全部放到该路由组下
-	v1 := r.Group("v1")
+	//v1 := r.Group("v1")
+	var v1 *gin.RouterGroup
+	if len(config.Get("app.api_domain")) == 0 {
+		v1 = r.Group("/api/v1")
+	} else {
+		v1 = r.Group("/v1")
+	}
 
 	//全局限流中间件
 	v1.Use(middlewares.LimitIP("200-H"))
